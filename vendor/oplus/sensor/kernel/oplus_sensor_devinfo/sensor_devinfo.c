@@ -63,7 +63,7 @@ enum {
 #define DEVINFO_LOG(fmt, args...)   pr_err(DEV_TAG"%s %d : "fmt, __func__, __LINE__, ##args)
 
 #define UINT2Ptr(n)     (uint32_t *)(n)
-#define Ptr2UINT32(p)   (uint32_t)(p)
+#define Ptr2UINTPtr(p)   (uintptr_t)(p)
 
 #define IS_SUPPROT_HWCALI           (0x01)
 #define IS_IN_FACTORY_MODE          (0x02)
@@ -811,8 +811,8 @@ static int als_cali_read_func(struct seq_file *s, void *v)
 {
     void *p = s->private;
 
-    DEVINFO_LOG("Ptr2UINT32(p) = %d \n", Ptr2UINT32(p));
-    switch (Ptr2UINT32(p)) {
+    DEVINFO_LOG("Ptr2UINTPtr(p) = %d \n", Ptr2UINTPtr(p));
+    switch (Ptr2UINTPtr(p)) {
     case RED_MAX_LUX:
         seq_printf(s, "%d", gdata->red_max_lux);
         break;
@@ -845,7 +845,7 @@ static ssize_t als_cali_write(struct file *filp, const char *ubuf, size_t cnt, l
     int ret = 0;
     struct seq_file *s = filp->private_data;
     void *p = s->private;
-    int node = Ptr2UINT32(p);
+    int node = Ptr2UINTPtr(p);
 
     if (cnt >= sizeof(buf)) {
         return -EINVAL;
@@ -1352,8 +1352,8 @@ static int sensor_feature_read_func(struct seq_file *s, void *v)
 	int ret = 0;
 	int selftest_result = 0;
 
-	DEVINFO_LOG("Ptr2UINT32(p) = %d \n", Ptr2UINT32(p));
-	switch (Ptr2UINT32(p)) {
+	DEVINFO_LOG("Ptr2UINTPtr(p) = %d \n", Ptr2UINTPtr(p));
+	switch (Ptr2UINTPtr(p)) {
 	case IS_SUPPROT_HWCALI:
 		if (!strcmp(sensorlist_info[ps].name, "tcs3701")) {
 			seq_printf(s, "%d", 1);
@@ -1423,7 +1423,7 @@ static ssize_t sensor_feature_write(struct file *filp, const char *ubuf, size_t 
 	int result = 0;
 	struct seq_file *s = filp->private_data;
 	void *p = s->private;
-	int node = Ptr2UINT32(p);
+	int node = Ptr2UINTPtr(p);
 
 	if (cnt >= sizeof(buf)) {
 		return -EINVAL;
